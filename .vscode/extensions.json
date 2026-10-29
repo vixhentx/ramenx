@@ -1,0 +1,9 @@
+{
+    "recommendations": [
+        "llvm-vs-code-extensions.vscode-clangd",
+        "xaver.clang-format",
+        "editorconfig.editorconfig",
+        "arrterian.nix-env-selector",
+        "jnoortheen.nix-ide"
+    ]
+}

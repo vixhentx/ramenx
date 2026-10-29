@@ -1,0 +1,5 @@
+name: ramenx
+
+build:
+  cmake: .
+  kconfig: zephyr/Kconfig

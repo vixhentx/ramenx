@@ -1,0 +1,12 @@
+manifest:
+  version: "1.2"
+
+  projects:
+    - name: zephyr
+      url: https://github.com/zephyrproject-rtos/zephyr
+      revision: main
+      path: modules/zephyr
+      west-commands: scripts/west-commands.yml
+
+  self:
+    path: .

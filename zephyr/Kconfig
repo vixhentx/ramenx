@@ -1,0 +1,5 @@
+menuconfig RAMENX
+	bool "ramen extensions"
+	default y
+	help
+	  Enable ramen operators and Zephyr scheduling integration.
