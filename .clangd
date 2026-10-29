@@ -1,0 +1,10 @@
+CompileFlags:
+  CompilationDatabase: build
+  Remove:
+    - -mfp16-format=ieee
+    - -fno-reorder-functions
+
+Diagnostics:
+  Suppress:
+    - vla-cxx-extension
+    - section
