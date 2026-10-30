@@ -14,15 +14,17 @@ ramenx 是 嵌入式消息库 [`ramen`](https://github.com/Zubax/ramen) 的Exten
 - src/inc: 本项目源代码. 被外部引用.
 - zephyr: 用于集成到zephyr模块系统中. 被外部引用
 
-## 设计思路与进展
+## 设计计划与进展
 
 计划实现这些功能:
 
-- [ ] 线程调度算子 `ObserveOn`
-- [ ] 线性算子
-	- `Transform`
-	- `Filter`
+- [ ] 异步actor: 解决跨线程问题的工具集合
+	- `MsgPipe`: 消息队列封装
+	- `Dispatcher`: 跨线程执行器
 	- ...
-- [ ] 时间算子, TimeProvider
-- [ ] 响应算子
+- [ ] 线性actor: 解决数据处理的工具集合
+	- `Combine`: 按需组合数据
+	- ...
+- [ ] 响应actor: 解决时序处理的工具集合
+	- `Debounce`: 数据消抖
 	- ...
