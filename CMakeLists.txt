@@ -4,7 +4,7 @@ target_include_directories(${ZEPHYR_CURRENT_LIBRARY}
 		"${CMAKE_CURRENT_LIST_DIR}/include"
 		"${CMAKE_CURRENT_LIST_DIR}/ramen"
 )
-if(CONFIG_RAMENX)
-	file(GLOB SOURCES "${CMAKE_CURRENT_LIST_DIR}/src/*.cpp")
-	zephyr_library_sources(${SOURCES})
-endif()
+# if(CONFIG_RAMENX)
+# 	file(GLOB SOURCES "${CMAKE_CURRENT_LIST_DIR}/src/*.cpp")
+# 	zephyr_library_sources(${SOURCES})
+# endif()
