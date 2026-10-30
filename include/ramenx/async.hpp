@@ -117,8 +117,8 @@ private:
  */
 struct DispatcherConfig
 {
-	int priority;         ///< 线程优先级
-	char* name = nullptr; ///< 可选线程名，需要 CONFIG_THREAD_NAME
+	int priority;               ///< 线程优先级
+	const char* name = nullptr; ///< 可选线程名，需要 CONFIG_THREAD_NAME
 };
 
 /**
