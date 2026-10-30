@@ -18,10 +18,10 @@ ramenx 是 嵌入式消息库 [`ramen`](https://github.com/Zubax/ramen) 的Exten
 
 计划实现这些功能:
 
-- [ ] 异步actor: 解决跨线程问题的工具集合
+- [-] 异步actor: 解决跨线程问题的工具集合
 	- `MsgQueue`: 消息队列封装
 	- `Dispatcher`: 跨线程执行器
-	- ...
+	- 常用的组合模块...
 - [ ] 线性actor: 解决数据处理的工具集合
 	- `Combine`: 按需组合数据
 	- ...

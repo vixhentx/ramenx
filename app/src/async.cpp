@@ -64,8 +64,9 @@ private:
 
 Sensor sensor{};
 Tracer tracer{};
-ramen::MsgQueue<int, 4> queue{};
-ramen::Dispatcher<int, 2048> dispatcher({.priority = 1, .name = "sensor_dispatcher"});
+ramen::QueueDispatcher<int, 2048, 4, ramen::OverflowPolicy::DropOldest> dispatcher(
+    {.priority = 1, .name = "sensor_dispatcher"}
+);
 
 } // namespace
 
@@ -74,15 +75,14 @@ namespace async
 
 /*
  * 连接关系:
- * sensor >> queue << dispatcher >> trace
+ * sensor >> dispatcher >> trace
  */
 void demo(k_timeout_t time)
 {
 	LOG_INF("Async demo started.");
 
-	sensor.out_isr >> queue.in;           // 传感器在isr推消息队列
-	dispatcher.in_wait >> queue.out_wait; // dispatcher 主动拉取消息队列
-	dispatcher.out >> tracer.in;          // 传感器推送到tracer
+	sensor.out_isr >> dispatcher.in;
+	dispatcher.out >> tracer.in;
 
 	LOG_INF("Async actor connected.");
 	dispatcher.start();
@@ -90,7 +90,8 @@ void demo(k_timeout_t time)
 
 	LOG_INF("Async actor started.");
 
-	queue.in(11111);
+	dispatcher.in(11111);
+	tracer.in(66);
 
 	k_sleep(time);
 }

@@ -196,4 +196,53 @@ private:
 	}
 };
 
+/**
+ * @brief 消息队列和处理线程二合一
+ * @note 常用于将中断产生的数据调度到线程中处理. 记得start
+ *
+ * @tparam T 数据的类型
+ * @tparam StackSize 线程栈大小
+ * @tparam Capacity 消息队列容量
+ * @tparam Policy 队列满时的处理方式
+ */
+template <
+    std::semiregular T,
+    std::size_t StackSize,
+    std::size_t Capacity,
+    OverflowPolicy Policy = OverflowPolicy::DropImcoming
+>
+    requires(StackSize > 0)
+class QueueDispatcher
+{
+public:
+	/**
+	 * @brief 外部主动输入口. 不会等待, 可以在ISR和线程中调用.
+	 *
+	 */
+	ramen::Pushable<T> in = [this](const T& value) { queue_.in(value); };
+	/**
+	 * @brief 主动输出口. 输出数据会在这个独有的线程上处理.
+	 *
+	 */
+	ramen::Pusher<T> out;
+
+	explicit QueueDispatcher(DispatcherConfig config)
+	    : dispatcher_(config)
+	{
+		dispatcher_.in_wait >> queue_.out_wait;
+		dispatcher_.out >> out;
+	}
+
+	void start() { dispatcher_.start(); }
+
+	QueueDispatcher(const QueueDispatcher&) = delete;
+	QueueDispatcher(QueueDispatcher&&) = delete;
+	QueueDispatcher& operator=(const QueueDispatcher&) = delete;
+	QueueDispatcher& operator=(QueueDispatcher&&) = delete;
+
+private:
+	MsgQueue<T, Capacity> queue_{};
+	Dispatcher<T, StackSize> dispatcher_;
+};
+
 } // namespace ramen
