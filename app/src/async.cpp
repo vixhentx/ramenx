@@ -34,11 +34,10 @@ private:
 	atomic_t cnt_{};
 	static void tick(k_timer* timer)
 	{
-		auto& self = reinterpret_cast<Sensor&>(timer->user_data);
+		auto& self = *static_cast<Sensor*>(timer->user_data);
 		atomic_inc(&self.cnt_);
 		// 中断直接输出数据
 		auto value = static_cast<int>(self.cnt_);
-		// FIXME: 这里会有bug! 执行时观测者列表是空的!
 		self.out_isr(value);
 	}
 };
