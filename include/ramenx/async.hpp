@@ -122,7 +122,7 @@ struct DispatcherConfig
 };
 
 /**
- * @brief 创建并持有一个线程来持续处理跨线程数据
+ * @brief 创建并持有一个线程来持续处理会阻塞等待的输入源. 借助"线程的动力"将阻塞数据源读取并推送.
  * @note 目前设计为分离线程启动与数据流连接, 并且不提供销毁(伴随整个应用)
  *
  * @tparam T 端口数据类型
@@ -130,12 +130,13 @@ struct DispatcherConfig
  */
 template <std::semiregular T, std::size_t StackSize>
     requires(StackSize > 0)
-class Dispatcher
+class ThreadLift
 {
 public:
 	/**
 	 * @brief 线程阻塞等待的输入端口
 	 * @note 可以连接到上面的MsgPipe等待输出端口
+	 * @warning 输入应提供等待机制. 如果输入立即返回，线程会空跑循环占满CPU.
 	 *
 	 */
 	Puller<T> in_wait{};
@@ -146,7 +147,7 @@ public:
 	 */
 	Pusher<T> out{};
 
-	explicit Dispatcher(DispatcherConfig config) noexcept
+	explicit ThreadLift(DispatcherConfig config) noexcept
 	{
 		(void)k_thread_create(
 		    &thread_, stack_, K_KERNEL_STACK_SIZEOF(stack_), thread_entry, this, nullptr, nullptr, config.priority, 0,
@@ -158,7 +159,7 @@ public:
 		}
 	}
 
-	~Dispatcher() noexcept
+	~ThreadLift() noexcept
 	{
 		if (atomic_get(&started_) != 0)
 		{
@@ -166,10 +167,10 @@ public:
 		}
 	}
 
-	Dispatcher(const Dispatcher&) = delete;
-	Dispatcher& operator=(const Dispatcher&) = delete;
-	Dispatcher(Dispatcher&&) = delete;
-	Dispatcher& operator=(Dispatcher&&) = delete;
+	ThreadLift(const ThreadLift&) = delete;
+	ThreadLift& operator=(const ThreadLift&) = delete;
+	ThreadLift(ThreadLift&&) = delete;
+	ThreadLift& operator=(ThreadLift&&) = delete;
 
 	void start()
 	{
@@ -186,7 +187,7 @@ private:
 
 	static void thread_entry(void* pself, void*, void*)
 	{
-		auto& self = *static_cast<Dispatcher*>(pself);
+		auto& self = *static_cast<ThreadLift*>(pself);
 		for (;;)
 		{
 			T value{};
@@ -242,7 +243,7 @@ public:
 
 private:
 	MsgQueue<T, Capacity> queue_{};
-	Dispatcher<T, StackSize> dispatcher_;
+	ThreadLift<T, StackSize> dispatcher_;
 };
 
 } // namespace ramen

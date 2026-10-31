@@ -22,9 +22,10 @@ ramenx 是 嵌入式消息库 [`ramen`](https://github.com/Zubax/ramen) 的Exten
 	- `MsgQueue`: 消息队列封装
 	- `Dispatcher`: 跨线程执行器
 	- 常用的组合模块...
-- [ ] 线性actor: 解决数据处理的工具集合
+- [ ] 逻辑actor: 解决数据处理的工具集合
+	- `Property`: 缓存, 幅值时通知
 	- `Combine`: 按需组合数据
 	- ...
-- [ ] 响应actor: 解决时序处理的工具集合
+- [ ] 时间actor: 解决时序处理的工具集合
 	- `Debounce`: 数据消抖
 	- ...
