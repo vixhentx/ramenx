@@ -10,7 +10,12 @@
  */
 #pragma once
 
+#include <array>
+#include <cstddef>
 #include <ramen.hpp>
+#include <tuple>
+#include <type_traits>
+#include <utility>
 
 namespace ramen
 {
@@ -55,6 +60,49 @@ public:
 
 private:
 	T value_;
+};
+
+/**
+ * @brief 推送式过滤器. 判定函数返回 true 时, 将输入原样推送到下游.
+ *
+ * @tparam T 数据类型, 支持多参数及无参数触发.
+ * @note 判定函数按值持有, 接收 const T&... 并返回可隐式转换为 bool 的结果.
+ *       可用 Filter<Footprint<N>, T...> 调整判定函数的捕获空间, 不分配堆内存.
+ * @code
+ * Filter<int> positive = [](const int& value) { return value > 0; };
+ * @endcode
+ */
+template <typename... T>
+struct Filter;
+
+template <std::size_t fp, typename... T>
+struct Filter<Footprint<fp>, T...>
+{
+	Pushable<Footprint<sizeof(std::tuple<std::array<std::byte, fp>, void*>)>, T...> in;
+	Pusher<T...> out{};
+
+	template <typename F>
+	    requires(std::is_invocable_r_v<bool, F&, const T&...>)
+	explicit(false) Filter(F predicate)
+	    : in([this, predicate_ = std::move(predicate)](const T&... values) mutable {
+		      if (predicate_(values...))
+		      {
+			      out(values...);
+		      }
+	      })
+	{}
+};
+
+template <typename... T>
+struct Filter : public Filter<Footprint<default_behavior_footprint>, T...>
+{
+	using Filter<Footprint<default_behavior_footprint>, T...>::Filter;
+};
+
+template <std::size_t fp>
+struct Filter<Footprint<fp>, void> : public Filter<Footprint<fp>>
+{
+	using Filter<Footprint<fp>>::Filter;
 };
 
 } // namespace ramen
