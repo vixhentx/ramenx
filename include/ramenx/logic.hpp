@@ -34,7 +34,7 @@ public:
 	 */
 	ramen::Pushable<T> in = [this](const T& new_v) {
 		// FIXME: 处理float的精度判断问题
-		if (new_v == value_)
+		if (new_v != value_)
 		{
 			value_ = new_v;
 			out(new_v);
@@ -51,10 +51,7 @@ public:
 	 */
 	ramen::Pullable<T> out_cur = [this](T& out) { out = value_; };
 
-	explicit Property(T initial)
-	    : value_(initial)
-	{}
-	explicit Property(const T& initial)
+	explicit(false) Property(const T& initial)
 	    : value_(initial)
 	{}
 
