@@ -30,19 +30,17 @@ ramenx 是 嵌入式消息库 [`ramen`](https://github.com/Zubax/ramen) 的Exten
 由外部输入或读取驱动, 可保存有界状态, 默认同步执行并要求串行访问.
 
 - [.] `Property`: 保存当前值, 支持读取和变化通知
-- [x] `Filter`: 按谓词过滤输入
-- [ ] `Combine`: 多源最新值组合
-- [ ] `With`: 主输入触发时, 组合其他输入的最新值
-- [ ] `Window` / `Pair`: 将数据按窗口滑动组合
-- [ ] `Scan`: 累积更新状态并输出
-- [ ] `Buffer`: 按数量收集数据, 使用固定容量缓冲区
+- [ ] `Picker`: 谓词(检验器)为 true 时转发输入
+- [ ] `Combine`: 组合最新值并输出单个结果, 编译期选择 Any 或 First 输入触发模式
+- [ ] `Window` / `Pair`: 输出滑动窗口(N > 2)或前后值对, 显式提供初始窗口或前值
+- [ ] `Accumulator`: 从显式初值累积更新状态, 每次输入均输出
+- [ ] `Batcher`: 使用固定容量缓冲区, 每收满 N 个输入输出一个批次(N > 1)
 - [ ] `MovingAverage`: 固定窗口滑动平均
-- [ ] `Hysteresis`: 双阈值滞回判断
-- [ ] `Deadband`: 过滤指定幅度内的微小变化
-- [ ] `Edge`: 检测布尔输入的上升沿和下降沿
-- [ ] `Gate`: 根据控制输入允许或阻止数据通过
-- [ ] `Take`: 转发前 N 次输入
-- [ ] `Skip`: 跳过前 N 次输入
+- [ ] `Hysteresis`: 用 enter / leave 两个谓词控制状态切换, 仅变化时输出
+- [ ] `Deadband`: 谓词比较最近转发值与新输入, 为 true 时更新基准并转发
+- [ ] `Comparator`: 比较前值与当前输入, 每次更新前值并输出 bool
+- [ ] `Gate`: 默认关闭, 根据控制输入放行数据, 不缓存或补发
+- [ ] `CountGate`: 编译期选择 Take 或 Skip 模式, 转发或跳过指定次数的输入
 
 复用 ramen 已有的 `Latch`, `Lift`, `PushUnary`, `PullUnary`, `PullNary`, `PushCast` 和 `PullCast`.
 
