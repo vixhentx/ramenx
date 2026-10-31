@@ -30,7 +30,7 @@ ramenx 是 嵌入式消息库 [`ramen`](https://github.com/Zubax/ramen) 的Exten
 由外部输入或读取驱动, 可保存有界状态, 默认同步执行并要求串行访问.
 
 - [.] `Property`: 保存当前值, 支持读取和变化通知
-- [ ] `Filter`: 按谓词过滤输入
+- [x] `Filter`: 按谓词过滤输入
 - [ ] `Combine`: 多源最新值组合
 - [ ] `With`: 主输入触发时, 组合其他输入的最新值
 - [ ] `Window` / `Pair`: 将数据按窗口滑动组合
