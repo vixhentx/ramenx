@@ -12,6 +12,8 @@
 
 #include <ramen.hpp>
 
+namespace ramen
+{
 /**
  * @brief 属性/去重/缓存模块. 如果多次推送相同数据, 不会继续触发下游.
  *
@@ -54,3 +56,5 @@ public:
 private:
 	T value_;
 };
+
+} // namespace ramen
